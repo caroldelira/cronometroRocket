@@ -22,7 +22,7 @@ export const Button = styled.button`
 
   &:disabled {
     opacity: 0.3;
-    cursor: wait;
+    cursor: not-allowed;
   }
 
   &:not(:disabled):hover {
