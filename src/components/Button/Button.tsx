@@ -4,13 +4,14 @@ import * as Styled from './Button.styles';
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   label: string;
   icon?: ReactNode;
+  variant: 'start' | 'stop';
 }
 
-export function Button({ label, icon, ...props }: ButtonProps) {
+export function Button({ label, icon, variant, ...props }: ButtonProps) {
   return (
-    <Styled.Button {...props}>
+    <Styled.BaseButton variant={variant} {...props}>
       {icon && <span>{icon}</span>}
       {label}
-    </Styled.Button>
+    </Styled.BaseButton>
   );
 }

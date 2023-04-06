@@ -1,0 +1,1 @@
+export { Contador } from './Contador';

@@ -1,6 +1,28 @@
 import styled from 'styled-components'
 
-export const Button = styled.button`
+interface ButtonProps {
+  variant: 'start' | 'stop';
+}
+
+const variant = {
+  start: `
+        background-color: #B51E9A;
+
+        &:not(:disabled):hover {
+          background-color: #881F76;
+        }
+  `,
+  
+  stop: `
+        background-color: #F03847;
+
+        &:hover {
+          background-color: #7A1921;
+        }
+  `,
+};
+
+export const BaseButton = styled.button<ButtonProps>`
   width: 100%;
   border: 0;
   padding: 1rem;
@@ -14,8 +36,7 @@ export const Button = styled.button`
   font-weight: bold;
 
   cursor: pointer;
-
-  background-color: ${props => props.theme['purple-300']};
+ 
   color: ${props => props.theme['gray-200']};
 
   cursor: pointer;
@@ -25,7 +46,11 @@ export const Button = styled.button`
     cursor: not-allowed;
   }
 
-  &:not(:disabled):hover {
-    background-color: ${props => props.theme['purple-500']};
-  }
-`
+  ${(props) => variant[props.variant]};
+`;
+
+
+
+
+
+

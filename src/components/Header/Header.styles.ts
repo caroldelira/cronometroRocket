@@ -27,11 +27,11 @@ export const Header = styled.header`
       }
 
       &:hover {
-        border-bottom: 3px solid ${props => props.theme['purple-500']};
+        border-bottom: 3px solid ${props => props.theme['pink-300']};
       }
 
       &.active {
-        color: ${props => props.theme['purple-500']};
+        color: ${props => props.theme['blue-100']};
       }
     }
   }
