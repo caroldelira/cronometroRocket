@@ -14,13 +14,11 @@ export const HisoricoContainer = styled.main`
 
 export const TableContainer = styled.div`
   flex: 1;
-  overflow: auto;
   margin-top: 50px;
   width: 100%;
   
   table {
     width: 100%;
-    height: 200px;
     border-collapse: collapse;
     color:${(props) => props.theme['gray-200']};
     

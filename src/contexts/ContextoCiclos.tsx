@@ -39,15 +39,15 @@ export function ContextoCicloProvider({
       ciclo: [],
       cicloIdAtivo: null,
     },
-    () => {
+    /* () => {
       const historicoDosEstadosJSON = localStorage.getItem(
-        '@cronometro-rocket:ciclos-1.0.0',
+        '@cronometro-rocket:ciclos-2.0.0',
       );
 
       if (historicoDosEstadosJSON) {
         return JSON.parse(historicoDosEstadosJSON);
       }
-    },
+    }, */
   );
 
   const { ciclo, cicloIdAtivo } = estadoCiclos;
@@ -61,11 +61,11 @@ export function ContextoCicloProvider({
     return 0;
   });
 
-  useEffect(() => {
+  /*  useEffect(() => {
     const stateJSON = JSON.stringify(estadoCiclos);
 
-    localStorage.setItem('@cronometro-rocket:ciclos-1.0.0', stateJSON);
-  }, [estadoCiclos]);
+    localStorage.setItem('@cronometro-rocket:ciclos-2.0.0', stateJSON);
+  }, [estadoCiclos]); */
 
   function marcarTerminoDoCiclo() {
     dispatch({
