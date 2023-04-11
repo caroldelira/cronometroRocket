@@ -20,13 +20,6 @@ export function Formulario() {
         {...register('tarefa')}
       />
 
-      <datalist id="tarefas-feitas">
-        <option value="Projeto 1" />
-        <option value="Projeto 2" />z
-        <option value="Projeto 3" />
-        <option value="Projeto 4" />
-      </datalist>
-
       <label htmlFor="tempo">durante</label>
       <Styled.InputNumber
         id="tempo"

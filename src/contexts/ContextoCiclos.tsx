@@ -1,23 +1,22 @@
-import { createContext, ReactNode, useState } from 'react';
+import { differenceInSeconds } from 'date-fns';
+import {
+  createContext,
+  ReactNode,
+  useEffect,
+  useReducer,
+  useState,
+} from 'react';
+import { CicloProps, CiclosReducer, tiposDeAcao } from '../reducers/ciclos';
 
 interface CriarCicloProps {
   tarefa: string;
   tempo: number;
 }
 
-interface CicloProps {
-  id: string;
-  tarefa: string;
-  tempo: number;
-  dataInicio: Date;
-  dataInterrompida?: Date;
-  dataFinalizada?: Date;
-}
-
 interface ContextoCiclo {
   ciclo: CicloProps[];
   novoCiclo: CicloProps | undefined;
-  cicloId: string | null;
+  cicloIdAtivo: string | null;
   segundosPassados: number;
   marcarTerminoDoCiclo: () => void;
   setandoSegundos: (segundos: number) => void;
@@ -25,31 +24,56 @@ interface ContextoCiclo {
   pararCicloAtivo: () => void;
 }
 
-export const ContextoCiclo = createContext({} as ContextoCiclo);
-
 interface ContextoCicloProviderProps {
   children: ReactNode;
 }
 
+export const ContextoCiclo = createContext({} as ContextoCiclo);
+
 export function ContextoCicloProvider({
   children,
 }: ContextoCicloProviderProps) {
-  const [ciclo, setCiclo] = useState<CicloProps[]>([]);
-  const [cicloId, setCicloId] = useState<string | null>(null);
-  const [segundosPassados, setSegundosPassados] = useState(0);
+  const [estadoCiclos, dispatch] = useReducer(
+    CiclosReducer,
+    {
+      ciclo: [],
+      cicloIdAtivo: null,
+    },
+    () => {
+      const historicoDosEstadosJSON = localStorage.getItem(
+        '@cronometro-rocket:ciclos-1.0.0',
+      );
 
-  const novoCiclo = ciclo.find((ciclo) => ciclo.id === cicloId);
+      if (historicoDosEstadosJSON) {
+        return JSON.parse(historicoDosEstadosJSON);
+      }
+    },
+  );
+
+  const { ciclo, cicloIdAtivo } = estadoCiclos;
+  const novoCiclo = ciclo.find((ciclo) => ciclo.id === cicloIdAtivo);
+
+  const [segundosPassados, setSegundosPassados] = useState(() => {
+    if (novoCiclo) {
+      return differenceInSeconds(new Date(), new Date(novoCiclo.dataInicio));
+    }
+
+    return 0;
+  });
+
+  useEffect(() => {
+    const stateJSON = JSON.stringify(estadoCiclos);
+
+    localStorage.setItem('@cronometro-rocket:ciclos-1.0.0', stateJSON);
+  }, [estadoCiclos]);
 
   function marcarTerminoDoCiclo() {
-    setCiclo((estado) =>
-      estado.map((valorCiclo) => {
-        if (valorCiclo.id === cicloId) {
-          return { ...valorCiclo, dataFinalizada: new Date() };
-        } else {
-          return valorCiclo;
-        }
-      }),
-    );
+    dispatch({
+      type: tiposDeAcao.MARCAR_TERMINO_CICLO_ATIVO,
+      payload: {
+        cicloIdAtivo,
+      },
+    });
   }
 
   function setandoSegundos(segundos: number) {
@@ -59,31 +83,29 @@ export function ContextoCicloProvider({
   function criarNovoCiclo(data: CriarCicloProps) {
     const id = String(new Date().getTime());
 
-    const NovoCiclo: CicloProps = {
+    const novoCiclo: CicloProps = {
       id,
       tarefa: data.tarefa,
       tempo: data.tempo,
       dataInicio: new Date(),
     };
 
-    setCiclo((tarefas) => [...tarefas, NovoCiclo]);
-    setCicloId(id);
+    dispatch({
+      type: tiposDeAcao.CRIAR_NOVO_CICLO,
+      payload: {
+        novoCiclo,
+      },
+    });
     setSegundosPassados(0);
-
-    /* reset(); */
   }
 
   function pararCicloAtivo() {
-    setCiclo((estado) =>
-      estado.map((valorCiclo) => {
-        if (valorCiclo.id === cicloId) {
-          return { ...valorCiclo, dataInterrompida: new Date() };
-        } else {
-          return valorCiclo;
-        }
-      }),
-    );
-    setCicloId(null);
+    dispatch({
+      type: tiposDeAcao.INTERROMPER_CICLO_ATIVO,
+      payload: {
+        cicloIdAtivo,
+      },
+    });
   }
 
   return (
@@ -91,7 +113,7 @@ export function ContextoCicloProvider({
       value={{
         ciclo,
         novoCiclo,
-        cicloId,
+        cicloIdAtivo,
         marcarTerminoDoCiclo,
         segundosPassados,
         setandoSegundos,

@@ -18,24 +18,23 @@ export const TableContainer = styled.div`
   margin-top: 50px;
   width: 100%;
   
-
   table {
     width: 100%;
+    height: 200px;
     border-collapse: collapse;
     color:${(props) => props.theme['gray-200']};
     
-    min-width: 600px; // forçar para gerar o scroll na tabela quando tiver no mobile.
+    min-width: 400px; // forçar para gerar o scroll na tabela quando tiver no mobile.
     
 
     thead {
       background: ${(props) => props.theme['blue-300']};
       color: white;
-      text-align: left;
-      
+      text-align: left; 
     }
+
     th {
       line-height: 50px;
-      
 
       &:first-child {
         border-top-left-radius: 10px;
@@ -54,14 +53,12 @@ export const TableContainer = styled.div`
       line-height: 40px;
       background: ${(props) => props.theme['gray-700']};
       border-top: 3px solid ${(props) => props.theme['gray-800']};
+
       &:first-child {
         width: 50%;
         padding-left: 20px;
       }
     }
-
-
-
   }
 `;
 

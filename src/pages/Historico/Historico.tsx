@@ -1,5 +1,7 @@
 import { useContext } from 'react';
 import { ContextoCiclo } from '../../contexts/ContextoCiclos';
+import { formatDistanceToNow } from 'date-fns';
+import ptBR from 'date-fns/locale/pt-BR';
 import * as Styled from './Historico.styles';
 
 export function Historico() {
@@ -22,7 +24,12 @@ export function Historico() {
                 <tr key={ciclo.id}>
                   <td>{ciclo.tarefa}</td>
                   <td>{ciclo.tempo} minutos</td>
-                  <td>{ciclo.dataInicio.toDateString()}</td>
+                  <td>
+                    {formatDistanceToNow(new Date(ciclo.dataInicio), {
+                      addSuffix: true,
+                      locale: ptBR,
+                    })}
+                  </td>
                   {ciclo.dataFinalizada && (
                     <td>
                       <Styled.Status statusCor="verde">Concluído</Styled.Status>
